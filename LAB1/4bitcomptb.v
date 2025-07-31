@@ -3,7 +3,7 @@
 
 module tb();
 
-  reg a,b; 
+  reg [3:0]a,b; 
   wire c; 
 
   4bitcomp dut(
