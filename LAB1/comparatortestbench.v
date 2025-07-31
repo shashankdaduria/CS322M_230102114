@@ -9,7 +9,7 @@ module tb();
   comparator dut(
     .A(a),
     .B(b),
-    .Y1(greater)
+    .Y1(greater),
     .Y2(equal),
     .Y3(lower)
   );
