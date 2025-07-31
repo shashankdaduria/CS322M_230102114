@@ -1,4 +1,4 @@
-module (
+module compartor(
   input A;
   input B;
   output Y1;
