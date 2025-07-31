@@ -1,4 +1,4 @@
-module 4biteqcomp(
+module 4bitcomp(
   input [3:0] A;
   input [3:0] B;
   output C;
