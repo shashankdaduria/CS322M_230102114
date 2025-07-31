@@ -6,7 +6,7 @@ module tb();
   reg a,b; 
   wire c; 
 
-  eqcomparator4bit dut(
+  4bitcomp dut(
     .A(a),
     .B(b),
     .C(c)
