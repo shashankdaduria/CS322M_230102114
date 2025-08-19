@@ -1,74 +1,55 @@
-`timescale 1ns/1ps
+module tb_vending_mealy(
 
-module tb_vending_mealy;
-  reg clk, rst;
-  reg [1:0] coin;
-  wire dispense, chg5;
+    );
+
+  reg clk;
+  reg reset;
+  reg [1:0] coin;     // 00=idle, 01=5, 10=10, 11=ignore
+  wire dispense;
+  wire chg5;
 
   // Instantiate DUT
-  vending_mealy dut(
+  vending_mealy dut (
     .clk(clk),
-    .rst(rst),
+    .rst(reset),
     .coin(coin),
     .dispense(dispense),
     .chg5(chg5)
   );
 
-  // Clock generation (10 ns period)
-  always #5 clk = ~clk;
+  // Clock generation
+  initial clk = 0;
+  always #5 clk = ~clk;  // 100 MHz → 10ns period
 
+  // Stimulus
   initial begin
-    $dumpfile("vending_mealy_wave.vcd");
-    $dumpvars(0, tb_vending_mealy);
+    // init
+    reset = 1; coin = 2'b00;
+    #20; 
+    reset = 0;
 
-    // Initialize signals
-    clk = 0;
-    rst = 1;
-    coin = 2'b00;
+    // Case 1: Insert 5, 5, 10 → vend at 20
+    @(posedge clk); coin = 2'b01;  // 5
+    @(posedge clk); coin = 2'b01;  // 10 total
+    @(posedge clk); coin = 2'b10;  // 20 → vend
+    @(posedge clk); coin = 2'b00;  
 
-    // Apply reset
-    #10;
-    rst = 0;
+    // Case 2: Insert 10, 10, 5 → total=25 → vend + chg5
+    repeat(2) @(posedge clk); coin = 2'b10; // 10
+    @(posedge clk); coin = 2'b10;           // 20
+    @(posedge clk); coin = 2'b01;           // 25 → vend+chg5
+    @(posedge clk); coin = 2'b00;
 
-    // Insert 5 -> total = 5
-    #10 coin = 2'b01;
-    #10 coin = 2'b00;
+    // Case 3: Insert idle (00) in between valid coins
+    repeat(2) @(posedge clk); coin = 2'b01; // 5
+    @(posedge clk); coin = 2'b00;           // idle, ignored
+    @(posedge clk); coin = 2'b10;           // total=15
+    @(posedge clk); coin = 2'b01; 
+    @(posedge clk); coin = 2'b10;          // 25 → vend+chg5
 
-    // Insert 10 -> total = 15
-    #10 coin = 2'b10;
-    #10 coin = 2'b00;
-
-    // Insert 5 -> total = 20 -> dispense
-    #10 coin = 2'b01;
-    #10 coin = 2'b00;
-
-    // Insert 10 -> total = 10
-    #10 coin = 2'b10;
-    #10 coin = 2'b00;
-
-    // Insert 10 -> total = 20 -> dispense
-    #10 coin = 2'b10;
-    #10 coin = 2'b00;
-
-    // Insert 15 path: 10 + 10 + 5 = 25 -> dispense + chg5
-    #10 coin = 2'b10;   // total = 10
-    #10 coin = 2'b00;
-    #10 coin = 2'b10;   // total = 20 -> dispense
-    #10 coin = 2'b00;
-
-    // Insert sequence 15 + 10 = 25 case
-    #10 coin = 2'b10;   // total = 10
-    #10 coin = 2'b00;
-    #10 coin = 2'b10;   // total = 20 -> dispense
-    #10 coin = 2'b00;
-    #10 coin = 2'b01;   // start again: 5
-    #10 coin = 2'b00;
-    #10 coin = 2'b10;   // total = 15
-    #10 coin = 2'b00;
-    #10 coin = 2'b10;   // total = 25 -> dispense + chg5
-    #10 coin = 2'b00;
-
-    // Finish simulation
-    #50 $finish;
+    // End simulation
+    #50;
+    $stop;
   end
+
 endmodule
