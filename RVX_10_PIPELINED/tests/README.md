@@ -33,29 +33,6 @@ A high-performance 5-stage pipelined RISC-V processor implementing the RV32I bas
 
 ---
 
-## 📁 Project Structure
-
-```
-rvx10_P/
-├── src/
-│   ├── datapath.sv           # Main pipeline datapath
-│   ├── riscvpipeline.sv      # Top-level wrapper
-│   ├── controller.sv         # Instruction decoder
-│   ├── forwarding_unit.sv    # Data forwarding logic
-│   └── hazard_unit.sv        # Load-use hazard detection
-├── tb/
-│   ├── tb_pipeline.sv        # Basic testbench
-│   └── tb_pipeline_hazard.sv # Comprehensive hazard tests
-├── tests/
-│   ├── rvx10_pipeline.hex    # Basic functionality test
-│   └── rvx10_hazard_test.hex # Hazard stress test
-├── docs/
-│   └── REPORT.md             # Detailed design documentation
-└── README.md                 # This file
-```
-
----
-
 ## 🛠️ Getting Started
 
 ### Prerequisites
