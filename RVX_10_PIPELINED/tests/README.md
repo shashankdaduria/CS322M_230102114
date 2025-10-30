@@ -1,7 +1,6 @@
 # RVX10-P: 5-Stage Pipelined RISC-V Processor
 
-A high-performance 5-stage pipelined RISC-V processor implementing the RV32I base instruction set with custom RVX10 extensions for advanced bitwise and arithmetic operations.
-
+A high-performance 5-stage pipelined RISC-V processor implementing the RV32I base instruction set with custom RVX10 extensions.
 ---
 
 ## 🚀 Features
